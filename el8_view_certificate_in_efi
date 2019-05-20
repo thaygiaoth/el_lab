@@ -48,7 +48,7 @@ Xuất ra chứng chỉ và xem
 ./disitool.py extract /boot/efi/EFI/redhat/shimx64-redhat.efi shimx64-redhat.efi.der
 openssl pkcs7 -inform DER -print_certs -in shimx64-redhat.efi.der -noout -text
 
----Hoặc dùng WinSCP chép các file .{efi,EFI} về sử dụng hệ điều hành Windows
+---Hoặc dùng WinSCP chép các file .{efi,EFI} về máy sử dụng hệ điều hành Windows
 ---Sau đó dùng các công cụ sau
 
 Adlice PEViewer
