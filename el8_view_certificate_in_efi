@@ -1,0 +1,58 @@
+---Xuất ra (extract) và xem chứng chỉ (certificate) của các file .{efi,EFI} trong /boot/efi/EFI/
+
+B1. Trên RHEL 8 tạo kho rpm (repository) từ đĩa DVD
+---Có tham khảo https://access.redhat.com/solutions/1355683
+---Chưa có CentOS 8
+
+mount /dev/sr0 /mnt 
+
+hoặc mount /dev/cdrom /mnt vì /dev/cdrom -> sr0
+
+cat > /etc/yum.repos.d/rhel8dvd.repo << EOF
+[InstallMedia-BaseOS]
+name=Red Hat Enterprise Linux 8.0.0 - BaseOS
+mediaid=none
+metadata_expire=-1
+gpgcheck=1
+cost=500
+enabled=1
+baseurl=file:///mnt/BaseOS/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+[InstallMedia-AppStream]
+name=Red Hat Enterprise Linux 8.0.0 - AppStream
+mediaid=1359576196.686790
+metadata_expire=-1
+gpgcheck=1
+cost=500
+enabled=1
+baseurl=file:///mnt/AppStream/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+EOF
+
+Cài các gói cần thiết
+yum -y install python2 python2-pip wget unzip tree
+pip-2 install pefile
+
+B2. Cài công cụ disitool
+wget http://www.didierstevens.com/files/software/disitool_v0_3.zip
+Hoặc từ link dự phòng
+https://raw.githubusercontent.com/thaygiaoth/ubuntu_lab/master/disitool.py
+unzip disitool_v0_3.zip
+chmod +x disitool.py
+
+B3. Xem cây thư mục /boot/efi/EFI
+tree /boot/efi/EFI
+
+Xuất ra chứng chỉ và xem
+./disitool.py extract /boot/efi/EFI/redhat/shimx64-redhat.efi shimx64-redhat.efi.der
+openssl pkcs7 -inform DER -print_certs -in shimx64-redhat.efi.der -noout -text
+
+---Hoặc dùng WinSCP chép các file .{efi,EFI} về sử dụng hệ điều hành Windows
+---Sau đó dùng các công cụ sau
+
+Adlice PEViewer
+https://www.adlice.com/download/roguekillerpe/
+
+PPEE (puppy) Professional PE file Explorer
+https://www.mzrst.com/
