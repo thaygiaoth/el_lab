@@ -34,6 +34,12 @@ Cài các gói cần thiết
 yum -y install python2 python2-pip wget unzip tree
 pip-2 install pefile
 
+Tạo liên kết mềm (symbolic link) python trỏ tới python2
+ln -s /usr/bin/python2 /usr/bin/python
+
+Xem lại
+ll /usr/bin/python
+
 B2. Cài công cụ disitool
 wget http://www.didierstevens.com/files/software/disitool_v0_3.zip
 Hoặc từ link dự phòng
