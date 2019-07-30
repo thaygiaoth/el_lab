@@ -30,7 +30,7 @@ static int __init module1_init(void)
 	 * Thiết lập múi giờ VN trong môi trường shell:
     	 * timedatectl set-timezone Asia/Ho_Chi_Minh
     	 * Phần này không phải cách tổng quát để lấy thời gian ở không gian kernel (kernel space),
-    	 * chỉ thực hiện biến đổi số giây thành giờ, phút, giây tương ứng
+    	 * chỉ thực hiện biến đổi tổng số giây thành giờ, phút, giây tương ứng
     	 * Trong time.h có khá nhiều cấu trúc (struct) về thời gian!
     	 */
 
