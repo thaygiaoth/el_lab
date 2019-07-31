@@ -1,0 +1,28 @@
+
+---Biên dịch module không thuộc kernel---
+
+B1. Cài các gói cần thiết
+
+Trên El 7/8
+yum -y install kernel-devel-$(uname -r) gcc make wget 
+
+Trên Ubuntu 18.04.2
+apt -y install linux-headers-$(uname -r) make gcc libelf-dev wget
+
+B2. Tải về mã nguồn các module và Makefile
+
+wget -q https://raw.githubusercontent.com/thaygiaoth/el_lab/master/Makefile
+wget -q https://raw.githubusercontent.com/thaygiaoth/el_lab/master/module1.c
+wget -q https://raw.githubusercontent.com/thaygiaoth/el_lab/master/module2.c
+
+Chú ý: module1.c, module2.c và Makefile phải cùng nằm trong 1 thư mục
+
+B3. Biên dịch module
+Chuyển vào thư mục chứa 3 file vừa tải về
+Chạy lệnh make 
+---> tạo ra module1.ko và module2.ko là module của kernel
+
+B3. Xóa các file sinh ra sau khi chạy lệnh make
+make clean
+
+B4. Thực hiện các lệnh ismod, rmmod, modprobe, depmod... như slide bài giảng
