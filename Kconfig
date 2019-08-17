@@ -1,0 +1,44 @@
+# Cú pháp lệnh Kconfig 
+# 
+# https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
+# 
+# Tạo thư mục thucdon ở thư mục gốc kernel, chép file Kconfig này vào đó
+# 
+# ví dụ:
+# linux-5.2.6#mkdir thucdon
+#
+# Thêm vào cuối file Kconfig ở thư mục gốc kernel dòng source "thuchon/Kconfig"
+# 
+# ví dụ:
+# linux-5.2.6#echo -e "\nsource \"thucdon/Kconfig\"" >> Kconfig
+# 
+
+menu "Super device"
+
+config SIEU_THIETBI
+        tristate "Super device for supercomputer"
+        help
+          Muon tieng Viet co dau ma khong duoc, tieng Anh thi hem bit
+	  Chi co thuc don thoi, khong co mon an dau nha may ban
+	  --> co vo ma khong co ruot 
+	  Day la thiet bi dac biet danh cho sieu may tinh
+	  Chi chon khi dang su dung sieu may tinh   
+	  Neu may ca nhan chon N
+
+config SIEU_THIETBI_TINHTOAN
+        bool "Tính toán siêu nhanh"
+        depends on SIEU_THIETBI
+        default y
+        help
+	  Tinh toan de doc va ghi chep nhanh nhu be hoc lop 1
+	  Nhung khong bang be hoc lop 2
+
+config SIEU_THIETBI_GOROI
+        bool "Hỗ trợ gỡ rối tơ lòng (debug) cho siêu thiết bị"
+        depends on SIEU_THIETBI
+        help
+          Che do in ra nhieu thong tin hon
+	  Moi truong van hanh (production) khong chon chuc nang nay
+	  vi se chiu hinh phat (penalty) lam sieu may tinh thanh sieu rua bo
+
+endmenu
