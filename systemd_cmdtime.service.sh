@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Script này chỉ kiểm tra chạy trên EL 7/8 và Ubuntu 18.04
+
 ### B1. Tạo file lệnh cmdtime ###
 
 # Dùng 'EOF' để giữ nguyên các kí tự bên trong muốn ghi ra file, 
@@ -25,7 +27,17 @@ chmod +x /usr/bin/cmdtime
 
 ### B3. Tạo dịch vụ cmdtime.service trong systemd ###
 
-cat > /usr/lib/systemd/system/cmdtime.service << 'EOF'
+# Nếu là EL 7/8 thì phải tạo trong /usr/lib/systemd/system/
+# Nếu là Ubuntu thì phải tạo trong /lib/systemd/system/
+
+duongdan='/usr/lib/systemd/system'
+
+# Kiểm tra là Ubuntu
+if [ -f /etc/lsb-release ] && grep -i 'DISTRIB_ID=Ubuntu' /etc/lsb-release &>/dev/null; then
+	duongdan='/lib/systemd/system'
+fi
+
+cat > $duongdan/cmdtime.service << 'EOF'
 [Unit]
 Description=Ghi thời gian chạy lệnh 1 giây 1 lần vào /var/log/cmdtime.log
 After=default.target
