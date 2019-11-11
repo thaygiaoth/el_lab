@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Có thay đổi SUSE Linux Enterprise thành CentOS 8 còn lại chép i xì từ đây https://gist.github.com/abergmann/13e1ef5c0ad06a640f90aa8a9897644e-->
+<!-- Minh họa sử dụng oscap xccdf eval --oval-results --profile standard --cpe /usr/share/openscap/cpe/openscap-cpe-dict.xml xccdf.xml-->
+
+<Benchmark
+  xmlns="http://checklists.nist.gov/xccdf/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  id="test">
+  <status date="2017-10-09">draft</status>
+  <title>Hardening CentOS 8</title>
+  <platform idref="cpe:/o:centos:centos:8"/>
+  <version>1</version>
+
+  <Profile id="standard">
+    <title>Standard System Security Profile</title>
+    <select idref="no_direct_root_logins" selected="true"/>
+  </Profile>
+
+  <Group id="root_logins">
+    <title>Restrict Root Logins</title>
+
+    <Rule id="no_direct_root_logins" selected="false" severity="medium">
+      <title>Direct root Logins Not Allowed</title>
+      <fix system="urn:xccdf:fix:script:sh">echo &gt; /etc/securetty</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:no_direct_root_logins:def:1" href="oval.xml"/>
+      </check>
+    </Rule>
+
+  </Group>
+</Benchmark>
