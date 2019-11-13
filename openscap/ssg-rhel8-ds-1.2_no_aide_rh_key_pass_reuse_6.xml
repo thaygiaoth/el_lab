@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--Cách dễ nhất là dùng SCAP Workbench trên Windows tạo customize profile PCI-DSS
+từ /usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml
+
+Sau đó chỉnh lại đường dẫn trong xccdf:benchmark href=""
+thành "/usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml để chạy trên CentOS 8-->
+
+<xccdf:Tailoring xmlns:xccdf="http://checklists.nist.gov/xccdf/1.2" 
+	id="xccdf_scap-workbench_tailoring_default">
+	
+  <xccdf:benchmark href="/usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml"/>
+  
+  <xccdf:version time="2019-11-13T13:13:01">1</xccdf:version>
+  
+  <xccdf:Profile id="xccdf_org.ssgproject.content_profile_pci-dss_customized" 
+	  extends="xccdf_org.ssgproject.content_profile_pci-dss">
+
+	  <xccdf:title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US" override="true">
+		  PCI-DSS v3.2.1 Control Baseline for Red Hat Enterprise Linux 8 [CUSTOMIZED]
+	  </xccdf:title>
+
+	  <xccdf:description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US" override="true">
+		  Ensures PCI-DSS v3.2.1 related security configuration settings are applied.
+	  </xccdf:description>
+
+    <xccdf:select idref="xccdf_org.ssgproject.content_group_aide" selected="false"/>
+    
+    <xccdf:select idref="xccdf_org.ssgproject.content_rule_package_aide_installed" selected="false"/>
+    
+    <xccdf:select idref="xccdf_org.ssgproject.content_rule_aide_periodic_cron_checking" selected="false"/>
+    
+    <xccdf:select idref="xccdf_org.ssgproject.content_rule_aide_verify_acls" selected="false"/>
+    
+    <xccdf:select idref="xccdf_org.ssgproject.content_rule_aide_verify_ext_attributes" selected="false"/>
+    
+    <xccdf:select idref="xccdf_org.ssgproject.content_rule_aide_use_fips_hashes" selected="false"/>
+    
+    <xccdf:select idref="xccdf_org.ssgproject.content_rule_aide_build_database" selected="false"/>
+    
+    <xccdf:select idref="xccdf_org.ssgproject.content_rule_aide_scan_notification" selected="false"/>
+    
+    <xccdf:select idref="xccdf_org.ssgproject.content_rule_ensure_redhat_gpgkey_installed" selected="false"/>
+    
+    <xccdf:set-value idref="xccdf_org.ssgproject.content_value_var_password_pam_unix_remember">6</xccdf:set-value>
+  
+  </xccdf:Profile>
+
+</xccdf:Tailoring>
