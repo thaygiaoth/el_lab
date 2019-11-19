@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--Có tham khảo code từ https://gist.github.com/abergmann/13e1ef5c0ad06a640f90aa8a9897644e
+    Nhưng cũng chỉnh sửa bấy bá hết để lên xccdf 1.2 -->
+
+<!--Khai báo các nêm xờ bây (namespace - ns) xml cho oval để đúng cú pháp khi biên dịch -->
+<oval-def:oval_definitions
+  xmlns:oval-def="http://oval.mitre.org/XMLSchema/oval-definitions-5"
+  xmlns:oval="http://oval.mitre.org/XMLSchema/oval-common-5"
+  xmlns:ind-def="http://oval.mitre.org/XMLSchema/oval-definitions-5#independent"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://oval.mitre.org/XMLSchema/oval-definitions-5 oval-definitions-schema.xsd
+                      http://oval.mitre.org/XMLSchema/oval-common-5 oval-common-schema.xsd
+                      http://oval.mitre.org/XMLSchema/oval-definitions-5#independent independent-definitions-schema.xsdi">
+
+  <oval-def:generator>
+    <oval:schema_version>5.11</oval:schema_version>
+    <oval:timestamp>2019-11-18T15:53:41</oval:timestamp>
+  </oval-def:generator>
+
+	<!-- Cấu trúc của 1 phần tử (element) trong oval:
+		oval:namespace:type:ID 
+		Trong đó:
+		namespace là tên ta tự định nghĩa
+		type bao gồm: 
+		  1. def (definition) là định nghĩa phần tử 
+		  2. tst (test) là phần tử kiểm tra
+		  3. obj (object) là đối tượng của phần tử 
+		  4. ste (state) là tình trạng của phần tử
+		  5. var (variable) là biến của phần tử
+		ID là 1 số nguyên cho cấu trúc đó 
+		
+		Trong file này có 3 em
+		oval:kiem_tra_nameserver:def:1
+		oval:kiem_tra_nameserver:tst:1
+		oval:co_file_etc_resolv.conf:tst:2 -->
+
+	
+  <!--Định nghĩa phần tử oval:kiem_tra_nameserver:def:1 
+      Gồm kiểm tra 2 phần tử theo điều kiện và
+      oval:kiem_tra_nameserver:tst:1 
+      oval:co_file_etc_resolv.conf:tst:2 -->	   
+  <oval-def:definitions>
+
+    <oval-def:definition id="oval:kiem_tra_nameserver:def:1" class="compliance" version="1">
+	
+     <oval-def:metadata>
+	   
+        <oval-def:title>Coi bên dưới nha</oval-def:title>
+        <oval-def:description>Có ghi chú chi tiết nhưng không chắc vậy là chi tiết chưa</oval-def:description>     
+	<oval-def:reference ref_id="them_nameserver"/> 
+        <!--Để biết là cho rule xccdf_cua_rule_nameserver trong xccdf-don-gian.xml đó mí bạn -->
+
+     </oval-def:metadata>
+    
+      <oval-def:criteria operator="AND"> <!--Điều kiện và, 2 cái phải cùng đúng nha mí bạn -->
+	   
+	<oval-def:criterion comment="Đầu dòng là nameserver" test_ref="oval:kiem_tra_nameserver:tst:1"/>
+        <oval-def:criterion comment="Có file /etc/resolv.conf" test_ref="oval:co_file_etc_resolv.conf:tst:2"/>
+
+      </oval-def:criteria>
+    
+    </oval-def:definition>
+  
+  </oval-def:definitions>
+
+  <oval-def:tests>
+   
+	<!--Code mẫu về textfilecontent54 xem thêm ở đây 
+	https://github.com/OVALProject/Test-Content/blob/master/linux/ind-def_textfilecontent54_test.xml
+	Kiểm tra oscap có hỗ trợ đối tượng OVAL textfilecontent54 hay không oscap -V | grep textfilecontent -->
+	
+    <!--Phần tử kiểm tra oval:kiem_tra_nameserver:tst:1 
+	gọi tới đối tượng oval:kiem_tra_nameserver:obj:1 -->
+    <ind-def:textfilecontent54_test id="oval:kiem_tra_nameserver:tst:1" check="all" check_existence="all_exist" 
+        comment="Đầu dòng là nameserver" version="1">
+      <ind-def:object object_ref="oval:kiem_tra_nameserver:obj:1"/>
+    </ind-def:textfilecontent54_test>
+	
+    <!--Phần tử kiểm tra oval:co_file_etc_resolv.conf:tst:2 
+	gọi tới đối tượng oval:co_file_etc_resolv.conf:obj:2 -->	
+    <ind-def:textfilecontent54_test id="oval:co_file_etc_resolv.conf:tst:2" check="all" check_existence="all_exist"
+        comment="Có /etc/resolv.conf" version="1">
+      <ind-def:object object_ref="oval:co_file_etc_resolv.conf:obj:2"/>
+    </ind-def:textfilecontent54_test>
+  </oval-def:tests>
+
+  <oval-def:objects>
+	  
+    <!--Đối tượng oval:kiem_tra_nameserver:obj:1 
+	kiểm tra file /etc/resolv.conf có từ dòng 2 dòng trở lên bắt đầu bằng nameserver -->	 
+    <ind-def:textfilecontent54_object id="oval:kiem_tra_nameserver:obj:1" comment="Đầu dòng là nameserver" version="1">
+      <ind-def:filepath>/etc/resolv.conf</ind-def:filepath>
+      <ind-def:pattern operation="pattern match">^nameserver</ind-def:pattern>
+      <ind-def:instance datatype="int" operation="greater than or equal">2</ind-def:instance>
+    </ind-def:textfilecontent54_object>
+    
+    <!--Đối tượng oval:co_file_etc_resolv.conf:obj:2 kiểm tra có file /etc/resolv.conf -->		 
+    <ind-def:textfilecontent54_object id="oval:co_file_etc_resolv.conf:obj:2" comment="Có file /etc/resolv.conf" version="1">
+      <ind-def:filepath>/etc/resolv.conf</ind-def:filepath>
+	  
+	  <!--Giải thích regex: ^ là dầu dòng, $ là cuối dòng, 
+	  \s (whitespace) là khoảng trắng, \d (digit) là số,
+	  + là đúng với mẫu trước đó (bên trái) 1 hoặc nhiều lần 
+	  https://oval.mitre.org/language/about/re_support_5.6.html -->
+	  
+      <ind-def:pattern operation="pattern match">^nameserver\s+\d+\.\d+\.\d+\.\d+$</ind-def:pattern>
+      <ind-def:instance datatype="int">1</ind-def:instance> 
+    </ind-def:textfilecontent54_object>
+
+  </oval-def:objects>
+
+</oval-def:oval_definitions>
