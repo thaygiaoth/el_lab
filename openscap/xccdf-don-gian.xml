@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--Tên benchmark id phải theo định dạng này: xccdf_[^_]+_benchmark_.+
+    Tên profile id phải theo định dạng này: xccdf_[^_]+_profile_.+
+    Tên group id phải theo định dạng này: xccdf_[^_]+_group_.+
+    Tên rule id phải theo định dạng này: xccdf_[^_]+_rule_.+ 
+
+    Thử đặt tên profile id=test 
+    và oscap xccdf eval - -report report.html - -profile standard xccdf.xml 
+    để kiểm tra lời tui nói -->
+
+<!--Khai báo các nêm xờ bây (namespace - ns) xml cho xccdf để đúng cú pháp khi biên dịch -->
+
+<Benchmark xmlns="http://checklists.nist.gov/xccdf/1.2" 
+	   xmlns:h="http://www.w3.org/1999/xhtml" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   id="xccdf_centos_benchmark_draft" 
+	   xsi:schemaLocation="http://checklists.nist.gov/xccdf/1.2 xccdf-1.2.xsd" 
+	   resolved="0">
+	   
+  <status date="2019-11-18">draft</status> 
+  <title>Profile cho crond</title>
+  <platform idref="cpe:/o:centos:centos:8"/>
+  <version>@@VERSION@@</version>
+
+  <!--Các cách tính điểm -->
+  <model system="urn:xccdf:scoring:default" />
+  <model system="urn:xccdf:scoring:flat" />
+  <model system="urn:xccdf:scoring:flat-unweighted" />
+
+  <Profile id="xccdf_centos8_profile_them_nameserver">
+    <title>Kiểm tra nhiều hơn 1 nameserver</title>
+    <select idref="xccdf_cua_rule_nameserver" selected="true"/>
+    <select idref="xccdf_cua_rule_crond" selected="true"/>
+  </Profile>
+
+  <Group id="xccdf_cua_group_nameserver">
+    <title>Group này cho profile them_nameserver</title>
+
+    <!--true=1 hoặc false=0, mặc định: 0 -->
+    <Rule id="xccdf_cua_rule_nameserver" selected="false" severity="medium" weight="5.9">
+      <title>Kiểm tra nhiều hơn 1 nameserver</title>
+	  
+	  <description xml:lang="vi">trong /etc/resolv.conf á</description>
+	  
+      <!--Cái này ví dụ thêm 1 DNS 8.8.8.8 thôi nha các bạn -->
+      <fix system="urn:xccdf:fix:script:sh" complexity="low" reboot="false">
+	  echo 'nameserver 8.8.8.8' >> /etc/resolv.conf
+	  </fix>
+	  
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+	  
+	<!--Gọi tới oval-don-gian.xml để kiểm tra 2 điều kiện -->
+        <check-content-ref name="oval:kiem_tra_nameserver:def:1" href="oval-don-gian.xml"/>
+      </check>
+    </Rule>
+
+    <Rule id="xccdf_cua_rule_crond" selected="true" severity="low">
+     <title>Kiểm tra crond đang chạy và tự động chạy khi khởi động OS</title>
+
+	 <description xml:lang="vi">bằng systemctl á</description>
+
+     <fix system="urn:xccdf:fix:script:commands">
+		 systemctl enable crond
+	     systemctl start crond
+     </fix>
+     
+     <!--Không có www. nha mí bạn, làm mình mất vài tiếng cho lỗi này, hic 
+     https://github.com/OpenSCAP/website/issues/199 -->
+     <check system="http://open-scap.org/page/SCE">
+      <check-import import-name="stdout" />
+	  
+      <!--Có thể dùng đường dẫn tương đối hoặc tuyệt đối đến crond.sh -->
+      <check-content-ref href="crond.sh" />
+     </check>
+
+    </Rule>
+	  
+  </Group>
+
+</Benchmark>
