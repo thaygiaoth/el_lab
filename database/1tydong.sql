@@ -48,3 +48,6 @@ DELIMITER ;
 
 -- sợ chạy lâu tốn điện quá thì mở 1 terminal khác
 -- mysql -uroot -p'password' -e 'use thờigian; call killthờigian'
+
+-- Các bạn tải file CSV chứa 1 tỷ dòng ở đây, đỡ tốn tiền điện chạy 4-5 ngày
+-- https://www.mediafire.com/folder/8udqydmaqlxi5/db_1tydong                                                                 
