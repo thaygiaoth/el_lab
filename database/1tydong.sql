@@ -13,8 +13,16 @@ CREATE TABLE dòngthờigian (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
+-- tăng tốc độ lên 2x, 3x khi tắt binlog
+-- chỉ ăn trong phiên làm việc (session) hiện tại
 SET sql_log_bin=off;
 
+-- Muốn tắt hoàn toàn binlog thì phải
+-- /etc/my.cnf
+-- [mysqld]
+-- disable_log_bin
+-- sau đó systemctl restart mysqld
+               
 DELIMITER //
 CREATE PROCEDURE thờigian()   
 BEGIN
